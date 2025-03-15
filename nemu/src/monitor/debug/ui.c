@@ -38,6 +38,10 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -46,8 +50,11 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  
   /* TODO: Add more commands */
+  { "si", "Execute N instructions step by step", cmd_si},
+  { "info", "Print informations", cmd_info},
+  { "x", "Scan memory", cmd_x},
 
 };
 
@@ -73,6 +80,85 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
+  return 0;
+}
+
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  int steps = (arg != NULL) ? atoi(arg) : 1;
+  cpu_exec(steps);
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  char *arg = strtok(NULL, " ");
+
+  if (arg == NULL || strlen(arg) != 1)
+  {
+    printf("Error: Missing argument in cmd_info\n");
+    return 0;
+  }
+
+  if (arg[0] == 'r')
+  {
+    printf("\n=== General Purpose Registers (32-bit) ===\n");
+    for (int i = 0; i < 8; i++)
+    {
+      printf("%-8s : 0x%08x\n", regsl[i], reg_l(i));
+    }
+
+    printf("\nEIP (Instruction Pointer)\n");
+    printf("%-8s : 0x%08x\n", "eip", cpu.eip);
+    printf("\n=== General Purpose Registers (16-bit) ===\n");
+    for (int i = 0; i < 8; i++) {
+      printf("%-8s : 0x%04x\n", regsw[i], reg_w(i));
+    }
+    printf("\n=== General Purpose Registers (8-bit) ===\n");
+    for (int i = 0; i < 8; i++) {
+      printf("%-8s : 0x%02x\n", regsb[i], reg_b(i));
+    }
+    printf("\n");
+  }
+  else if (arg[0] == 'w')
+  {
+    printf("\n=== Watchpoints Information ===\n");
+    print_watchpoint();
+  }
+  else
+  {
+    printf("Error: Invalid argum");
+  }
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  char *arg1 = strtok(NULL, " ");
+  if (arg1 == NULL) {
+      printf("Error: Missing parameter N. Please specify the number of consecutive memory reads.\n");
+      return 0;
+  }
+
+  int num_reads = atoi(arg1);
+  if (num_reads <= 0) {
+      printf("Error: Invalid value for N. It must be a positive integer.\n");
+      return 0;
+  }
+
+  char *arg2 = strtok(NULL, " ");
+  if (arg2 == NULL) {
+      printf("Error: Missing parameter EXPR. Please provide a valid memory address in hexadecimal format.\n");
+      return 0;
+  }
+
+  uint32_t addr_begin = strtoul(arg2, NULL, 16);
+    
+  printf("\nMemory Dump (Starting at 0x%08x):\n", addr_begin);
+  for (int i = 0; i < num_reads; i++) {
+      printf("0x%08x: 0x%02x\n", addr_begin, vaddr_read(addr_begin, 1));
+      addr_begin += 1;
+  }
+  printf("\n");
+
   return 0;
 }
 
