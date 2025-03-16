@@ -264,7 +264,6 @@ static bool check_parenthes(int a, int b) {
             }
         }
     }
-    Assert(tokens[a].type == ')', "Fail to find corresponding parenthesis!");
 	flag2 = (a == b);
 	return (flag1 && flag2);
 }
