@@ -209,7 +209,6 @@ static int dominant_operator(int a, int b) {
 					}
 				}
 			}
-			Assert(tokens[i].type == ')', "Fail to find corresponding parenthesis!");
 		}
 		else if (type >= TK_OR && type <= TK_NEG) {
 			int pri = operator_priority(type);
