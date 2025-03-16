@@ -189,7 +189,7 @@ static bool check_parentheses(int a, int b) {
 
 static int dominant_operator(int a, int b) {
 	int type, cur_dominant = -1, cur_priority = 99;
-	for (int i = a; i < b; ++i) {
+	for (int i = a; i <= b; ++i) {
 		type = tokens[i].type;
 		if (type == '(')
 		{
@@ -209,6 +209,7 @@ static int dominant_operator(int a, int b) {
 					}
 				}
 			}
+
 		}
 		else if (type >= TK_OR && type <= TK_NEG) {
 			int pri = operator_priority(type);
@@ -392,6 +393,6 @@ uint32_t expr(char *e, bool *success) {
 	}
 	
 	*success = true;
-	return eval(0, nr_token, success);
+	return eval(0, nr_token - 1, success);
 
 }
