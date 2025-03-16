@@ -211,7 +211,8 @@ static int dominant_operator(int a, int b) {
 			}
 
 		}
-		else if (type >= TK_OR && type <= TK_NEG) {
+		else if ((type >= TK_OR && type <= TK_NEG)
+    || type == '+' || type == '-' || type == '*' || type == '/') {
 			int pri = operator_priority(type);
 			if(pri <= cur_priority) {
 				cur_dominant = i;

@@ -186,7 +186,7 @@ static int cmd_p(char *args) {
     printf("Result: %u (unsigned) = %d (signed) = 0x%X (hex)\n", value, (int)value, value);
   }
   else {
-    printf("Evaluation Error: Failed to parse the expression.");
+    printf("Error: Failed to parse the expression.");
   }
   return 0;
 }
