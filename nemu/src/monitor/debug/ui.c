@@ -158,7 +158,7 @@ static int cmd_x(char *args) {
   }
   
   bool finish = false;
-  uint32_t addr_begin = expr(arg2,&finish);
+  uint32_t addr_begin = expr(arg2, &finish);
   if(!finish) {
     return 0;
   }
