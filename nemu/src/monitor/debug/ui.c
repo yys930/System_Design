@@ -41,6 +41,10 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
+static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
+
 
 static struct {
   char *name;
@@ -55,6 +59,9 @@ static struct {
   { "si", "Execute N instructions step by step", cmd_si},
   { "info", "Print informations", cmd_info},
   { "x", "Scan memory", cmd_x},
+  { "p", "Print the value of an expreesion", cmd_p},
+  { "w", "Set a watchpoint", cmd_w},
+  { "d", "Delete a watch point", cmd_d}
 
 };
 
@@ -149,9 +156,12 @@ static int cmd_x(char *args) {
       printf("Error: Missing parameter EXPR. Please provide a valid memory address in hexadecimal format.\n");
       return 0;
   }
-
+  
+  bool finish = false;
   uint32_t addr_begin = strtoul(arg2, NULL, 16);
-    
+  if(!finish) {
+    return 0;
+  }
   printf("\nMemory Dump (Starting at 0x%08x):\n", addr_begin);
   for (int i = 0; i < num_reads; i++) {
       printf("0x%08x: 0x%02x\n", addr_begin, vaddr_read(addr_begin, 1));
@@ -159,6 +169,32 @@ static int cmd_x(char *args) {
   }
   printf("\n");
 
+  return 0;
+}
+
+static int cmd_p(char *args) {
+  if(args == NULL) {
+    printf("Error: Expression is required.");
+    return 0;
+  }
+
+  bool finish = false;
+  uint32_t value = expr(args, &finish);
+
+  if(finish) {
+    printf("Expression: %s\n", args);
+    printf("Result: %u (unsigned) = %d (signed) = 0x%X (hex)\n", value, (int)value, value);
+  }
+  else {
+    printf("Evaluation Error: Failed to parse the expression.");
+  }
+  return 0;
+}
+
+static int cmd_w(char *args) {
+  return 0;
+}
+static int cmd_d(char *args) {
   return 0;
 }
 
