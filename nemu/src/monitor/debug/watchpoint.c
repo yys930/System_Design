@@ -25,8 +25,6 @@ void print_watchpoint() {
     printf("No watchpoint now!");
     return;
   }
-  printf("%-4s %-20s\n", "wp_no", "wp_expr");
-  printf("----------------------------\n");
   for(WP* tem = head; tem != NULL; tem=tem->next) {
     printf("%-4d %-20s\n", tem->NO, tem->expr);
   }
