@@ -192,6 +192,10 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_w(char *args) {
+  char *arg = strtok(NULL, " ");
+  if(!new_wp(arg)){
+    printf("Error: Creat watchpoint failed.");
+  }
   return 0;
 }
 static int cmd_d(char *args) {

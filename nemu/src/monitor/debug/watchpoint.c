@@ -21,5 +21,53 @@ void init_wp_pool() {
 /* TODO: Implement the functionality of watchpoint */
 
 void print_watchpoint() {
-  
+  if(head == NULL){
+    printf("No watchpoint now!");
+    return;
+  }
+  printf("%-4s %-20s\n", "wp_no", "wp_expr");
+  printf("----------------------------\n");
+  for(WP* tem = head; tem != NULL; tem=tem->next) {
+    printf("%-4d %-20s\n", tem->NO, tem->expr);
+  }
+}
+
+bool check_watchpoint() {
+  return true;
+}
+
+bool free_wp(int NO) {
+  WP* pre = NULL;
+  WP* cur = head;
+  while(cur!=NULL) {
+    if(cur->NO == NO) {
+      cur->expr = NULL;
+      cur->preval = 0;
+      if(pre == NULL) {head = cur->next;}
+      else {pre->next = cur->next;}
+      cur->next = free_;
+      free_ = cur;
+      return true;
+    }
+    pre = cur;
+    cur = cur->next;
+  }
+  return false;
+}
+
+bool new_wp(char* str) {
+  bool success = false;
+  uint32_t val = expr(str, &success);
+  if(!success)return false;
+  if(!free_) {
+    printf("Error: No extra space for a new watchpoint.\n");
+    return false;
+  }
+  WP* new_wp = free_;
+  free_ = free_->next;
+  new_wp->expr = str;
+  new_wp->preval = val;
+  new_wp->next = head;
+  head = new_wp;
+  return true;
 }

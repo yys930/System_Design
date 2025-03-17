@@ -275,12 +275,9 @@ static int eval(int a, int b, bool *success) {
 
 	if (a > b) {
 		*success = false;
-		printf("Error: Bad expression.");
+		printf("Error: Bad expression.\n");
 		return -1;	
-	}	
-
-
-	else if (a == b) {
+	} else if (a == b) {
 		int type = tokens[b].type;
 		char *str = tokens[b].str;
 
@@ -288,7 +285,7 @@ static int eval(int a, int b, bool *success) {
 			int val;
 			if (!str || (sscanf(str, "%x", &val) != 1)) {
 				*success = false;
-				printf("Error: Fail to read hexadecimal number!");
+				printf("Error: Fail to read hexadecimal number!\n");
 				return -1;
 			}
 			return val;
@@ -299,20 +296,14 @@ static int eval(int a, int b, bool *success) {
 		else if (type == TK_REG) 
 			return (int)regname_to_val(str + 1);	
 		
-		Assert(0, "Neither int nor hex int nor reg!");
-	}	
-
-
-	else if (check_parenthes(a, b) == true){
+		Assert(0, "Neither int nor hex int nor reg!\n");
+	} else if (check_parenthes(a, b) == true){
 		return eval(a + 1, b - 1, success);
-	}
-
-	
-	else {
+	} else {
 		int pos = dominant_operator(a, b);
 		if (pos < 0) {
 			*success  = false;
-			printf("Error: Fail to find dominant operator.");
+			printf("Error: Fail to find dominant operator.\n");
 			return -1;
 		}
 
@@ -336,7 +327,7 @@ static int eval(int a, int b, bool *success) {
 				case '/':
 					if (rval == 0) {
 						*success = false;
-						printf("Error: Divisor is zero.");
+						printf("Error: Divisor is zero.\n");
 						return -1;
 					} 
 					return lval / rval;
@@ -365,7 +356,7 @@ static int eval(int a, int b, bool *success) {
 			}
 		}
 		else
-			Assert(0, "Neither binary operator nor unary operator!");
+			Assert(0, "Neither binary operator nor unary operator!\n");
 	}
 }
 
@@ -378,7 +369,7 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   if (!check_parentheses(0, nr_token)) {
 		*success = false;
-		printf("Syntex Error: Parentheses are not matched!");
+		printf("Error: Parentheses are not matched!\n");
 		return 0;
 	} 
 
