@@ -65,7 +65,7 @@ bool new_wp(char* str) {
   }
   WP* new_wp = free_;
   free_ = free_->next;
-  new_wp->expr = str;
+  strcpy(new_wp->expr, str);
   new_wp->preval = val;
   new_wp->next = head;
   head = new_wp;
