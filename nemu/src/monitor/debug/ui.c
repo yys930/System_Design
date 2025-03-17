@@ -108,7 +108,7 @@ static int cmd_info(char *args) {
 
   if (arg[0] == 'r')
   {
-    printf("\n=== General Purpose Registers (32-bit) ===\n");
+    printf("=== General Purpose Registers (32-bit) ===\n");
     for (int i = 0; i < 8; i++)
     {
       printf("%-8s : 0x%08x\n", regsl[i], reg_l(i));
@@ -128,7 +128,7 @@ static int cmd_info(char *args) {
   }
   else if (arg[0] == 'w')
   {
-    printf("\n=== Watchpoints Information ===\n");
+    printf("=== Watchpoints Information ===\n");
     print_watchpoint();
   }
   else
