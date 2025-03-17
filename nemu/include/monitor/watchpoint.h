@@ -2,11 +2,8 @@
 #define __WATCHPOINT_H__
 
 #include "common.h"
-#include "nemu.h"
-
 #include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
