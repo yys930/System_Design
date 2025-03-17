@@ -237,7 +237,6 @@ static uint32_t regname_to_val(char *name) {
 		return cpu.eip;
 	else if (name[0] == 'e') {
 		index = find_reg_index(name, regsl);
-		Assert(index >= 0, "Error: %s doesn't exist!", name);
 		return reg_l(index);
 	}
 	else {
@@ -246,7 +245,6 @@ static uint32_t regname_to_val(char *name) {
 			return reg_w(index);
 
 		index = find_reg_index(name, regsb);
-		Assert(index >= 0, "Error: %s doesn't exist!", name);
 		return reg_b(index);
 	}	
 }
@@ -356,7 +354,7 @@ static int eval(int a, int b, bool *success) {
 			}
 		}
 		else
-			Assert(0, "Neither binary operator nor unary operator!\n");
+			assert(0);
 	}
 }
 
