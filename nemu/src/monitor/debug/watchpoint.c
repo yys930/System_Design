@@ -31,7 +31,26 @@ void print_watchpoint() {
 }
 
 bool check_watchpoint() {
-  return true;
+  bool flag = false;
+  uint32_t newval;
+  WP* tem = head;
+
+  while (tem != NULL)
+  {
+    bool success = false;
+    newval = expr(tem->expr,&success);
+    if(!success)return false;
+    if(newval != tem->preval) {
+      printf("Hit watchpoint %d: %s\n", tem->NO, tem->expr);
+      printf("Old_value: 0x%x\n", tem->preval);
+      printf("New_value: 0x%x\n", newval);
+      tem->preval = newval;
+      flag = true;
+    }
+    tem = tem->next;
+  }
+
+  return flag;
 }
 
 bool free_wp(int NO) {
