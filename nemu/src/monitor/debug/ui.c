@@ -199,6 +199,11 @@ static int cmd_w(char *args) {
 }
 
 static int cmd_d(char *args) {
+  char *arg = strtok(NULL, " ");
+  int NO = atoi(arg);
+  if(!free_wp(NO)) {
+    printf("Error: Delete watchpoint failed.");
+  }
   return 0;
 }
 
