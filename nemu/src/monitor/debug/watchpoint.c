@@ -41,7 +41,7 @@ bool free_wp(int NO) {
   WP* cur = head;
   while(cur!=NULL) {
     if(cur->NO == NO) {
-      cur->expr = NULL;
+      cur->expr[0] = '\0';
       cur->preval = 0;
       if(pre == NULL) {head = cur->next;}
       else {pre->next = cur->next;}
@@ -65,7 +65,7 @@ bool new_wp(char* str) {
   }
   WP* new_wp = free_;
   free_ = free_->next;
-  new_wp->expr = str;
+  strcpy(new_wp->expr, str);
   new_wp->preval = val;
   new_wp->next = head;
   head = new_wp;

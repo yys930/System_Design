@@ -10,7 +10,7 @@ typedef struct watchpoint {
 
   /* TODO: Add more members if necessary */
   uint32_t preval;
-  char* expr;
+  char expr[64];
 } WP;
 
 void print_watchpoint();
