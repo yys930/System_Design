@@ -46,8 +46,6 @@ make_EHelper(nop);
 
 make_EHelper(pusha);
 make_EHelper(popa);
-make_EHelper(cwtl);
-make_EHelper(xchg);
 make_EHelper(call_rm);
 make_EHelper(jmp_rm);
 make_EHelper(in);
