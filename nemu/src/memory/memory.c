@@ -1,5 +1,5 @@
 #include "nemu.h"
-
+#include "device/mmio.h"
 
 #define PMEM_SIZE (128 * 1024 * 1024)
 
@@ -11,10 +11,6 @@
 uint8_t pmem[PMEM_SIZE];
 
 /* Memory accessing interfaces */
-int is_mmio(paddr_t addr);
-uint32_t mmio_read(paddr_t addr, int len, int map_NO);
-void mmio_write(paddr_t addr, int len, uint32_t data, int map_NO);
-
 
 uint32_t paddr_read(paddr_t addr, int len) {
   int map_no = is_mmio(addr);
