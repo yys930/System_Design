@@ -23,10 +23,10 @@ _Screen _screen = {
 extern void* memcpy(void *, const void *, int);
 
 void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
-  int i;
-  for (i = 0; i < _screen.width * _screen.height; i++) {
-    fb[i] = i;
+  for (int i = 0; i < h; ++i) {
+    memcpy(fb + (y + i)*_screen.width + x, pixels + w * i, sizeof(uint32_t) * w);
   }
+  
 }
 
 void _draw_sync() {
