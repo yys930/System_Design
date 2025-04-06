@@ -21,9 +21,7 @@ uint32_t paddr_read(paddr_t addr, int len) {
   if(map_no < 0) {
     return pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
   }
-  else{
-    return mmio_read(addr, len, map_no);
-  }
+  return mmio_read(addr, len, map_no);
 }
 
 void paddr_write(paddr_t addr, int len, uint32_t data) {
