@@ -81,7 +81,7 @@ make_EHelper(cwtl) {
     rtl_shri(&reg_l(R_EAX), &reg_l(R_EAX), 16);
   }
   else {
-    //TODO();
+    // TODO();
     rtl_sext(&reg_l(R_EAX), &reg_l(R_EAX), 2);
   }
 
