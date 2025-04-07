@@ -16,12 +16,13 @@ make_EHelper(pop) {
   //TODO();
   rtl_pop(&t0);
   operand_write(id_dest, &t0);
-  
+
   print_asm_template1(pop);
 }
 
 make_EHelper(pusha) {
   //TODO();
+
   rtl_lr_l(&t0, R_ESP);
 
   rtl_push(&reg_l(R_EAX));
@@ -40,6 +41,7 @@ make_EHelper(pusha) {
 
 make_EHelper(popa) {
   //TODO();
+  
   rtl_pop(&reg_l(R_EDI));
   rtl_pop(&reg_l(R_ESI));
   rtl_pop(&reg_l(R_EBP));
