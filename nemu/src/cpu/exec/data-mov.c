@@ -41,7 +41,7 @@ make_EHelper(pusha) {
 
 make_EHelper(popa) {
   //TODO();
-  
+
   rtl_pop(&reg_l(R_EDI));
   rtl_pop(&reg_l(R_ESI));
   rtl_pop(&reg_l(R_EBP));
@@ -58,19 +58,23 @@ make_EHelper(popa) {
 
 make_EHelper(leave) {
   //TODO();
+
   rtl_mv(&reg_l(R_ESP), &reg_l(R_EBP));
   rtl_pop(&reg_l(R_EBP));
+
   print_asm("leave");
 }
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
+
     rtl_sext(&t0, &reg_l(R_EAX), 2);
     rtl_shri(&reg_l(R_EDX), &t0, 16);
   }
   else {
     //TODO();
+
     rtl_sari(&reg_l(R_EDX), &reg_l(R_EAX), 31);
   }
 
@@ -80,6 +84,7 @@ make_EHelper(cltd) {
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     //TODO();
+    
     rtl_shli(&reg_l(R_EAX), &reg_l(R_EAX), 24);
     rtl_sari(&reg_l(R_EAX), &reg_l(R_EAX), 8);
     rtl_shri(&reg_l(R_EAX), &reg_l(R_EAX), 16);
