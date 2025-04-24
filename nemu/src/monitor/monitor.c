@@ -82,7 +82,7 @@ static inline void load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
-  cpu.cs = 0x8;
+  cpu.cs = 8;
   cpu.eflags = 0x2;
 
 
