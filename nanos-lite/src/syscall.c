@@ -9,7 +9,7 @@ _RegSet* do_syscall(_RegSet *r) {
   a[4] = SYSCALL_ARG4(r);
 
   switch (a[0]) {
-    case SYS_none: r->eax = 1;
+    case SYS_none:  SYSCALL_ARG1(r) = 1;
                    break;
     case SYS_exit: _halt(a[1]);
                    break;
