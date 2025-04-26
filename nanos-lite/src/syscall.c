@@ -41,6 +41,24 @@ static inline _RegSet* sys_open(_RegSet *r) {
   return NULL;
 }
 
+ssize_t fs_read(int fd, void *buf, size_t len);
+static inline _RegSet* sys_read(_RegSet *r) {
+  int fd = (int)SYSCALL_ARG2(r);
+  void* buf = (void*)SYSCALL_ARG3(r);
+  size_t count = (size_t)SYSCALL_ARG4(r);
+  SYSCALL_ARG1(r) = fs_read(fd, buf, count);
+  return NULL;
+}
+
+static inline _RegSet* sys_close(_RegSet *r) {
+  
+  return NULL;
+}
+
+static inline _RegSet* sys_lseek(_RegSet *r) {
+  
+  return NULL;
+}
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
@@ -56,6 +74,12 @@ _RegSet* do_syscall(_RegSet *r) {
                    break;
     case SYS_open: sys_open(r);
                    break;
+    case SYS_read: sys_read(r);
+                   break; 
+    case SYS_close: sys_close(r);
+                   break;  
+    case SYS_lseek: sys_lseek(r);
+                   break;                                     
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
