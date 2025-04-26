@@ -33,6 +33,7 @@ void dispinfo_read(void *buf, off_t offset, size_t len);
 void fb_write(const void *buf, off_t offset, size_t len);
 size_t events_read(void *buf, size_t len);
 
+
 ssize_t fs_read(int fd, void *buf, size_t len) {
   assert(fd != FD_STDOUT && fd != FD_STDERR && fd != FD_STDIN);   // cases to ignore
   assert(fd < NR_FILES);
@@ -110,4 +111,15 @@ int fs_close(int fd) {
 
 size_t fs_filesz(int fd) {
   return file_table[fd].size;
+}
+
+int fs_open(const char *pathname, int flags, int mode) {
+  int fd;
+  for (fd = 0; fd < NR_FILES; ++fd) 
+    if (strcmp(file_table[fd].name, pathname) == 0) {
+      file_table[fd].open_offset = 0;
+      return fd;
+    }
+  assert(0);
+  return -1;
 }

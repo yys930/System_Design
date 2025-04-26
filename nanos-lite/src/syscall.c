@@ -32,6 +32,14 @@ static inline _RegSet* sys_brk(_RegSet *r) {
   SYSCALL_ARG1(r) = 0;
   return NULL;
 }
+int fs_open(const char *pathname, int flags, int mode);
+static inline _RegSet* sys_open(_RegSet *r) {
+  const char *path = (const char *)SYSCALL_ARG2(r);
+  int flags = (int)SYSCALL_ARG3(r);
+  int mode = (int)SYSCALL_ARG4(r);
+  SYSCALL_ARG1(r) = fs_open(path, flags, mode);
+  return NULL;
+}
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -45,6 +53,8 @@ _RegSet* do_syscall(_RegSet *r) {
     case SYS_write: sys_write(r);
                    break;
     case SYS_brk: sys_brk(r);
+                   break;
+    case SYS_open: sys_open(r);
                    break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
