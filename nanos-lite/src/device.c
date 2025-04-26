@@ -9,15 +9,34 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t len) {
-  return 0;
+  int key = _read_key();
+  bool down = false;
+  if (key == _KEY_NONE)
+    sprintf((char *)buf, "t %u\n", _uptime());
+  else {
+    if (key & 0x8000) {
+      key ^= 0x8000;
+      down = true;
+    }
+    sprintf((char *)buf, "k%c %s\n", (down ? 'd' : 'u'), keyname[key]);
+  } 
+  return strlen((char *)buf);
 }
 
 static char dispinfo[128] __attribute__((used));
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
+  memcpy(buf, dispinfo + offset, len);
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
+  int x, y;
+  assert(offset % 4 == 0 && len % 4 == 0);
+  offset /= sizeof(uint32_t);
+  len /= sizeof(uint32_t);
+  y = offset / _screen.width;
+  x = offset % _screen.width;  
+  _draw_rect((const uint32_t *)buf, x, y, len, 1);
 }
 
 void init_device() {
@@ -25,4 +44,5 @@ void init_device() {
 
   // TODO: print the string to array `dispinfo` with the format
   // described in the Navy-apps convention
+  sprintf(dispinfo, "screen width:%d\nscreen hight:%d\n", _screen.width, _screen.height);
 }
