@@ -11,19 +11,21 @@ static inline _RegSet* sys_exit(_RegSet *r) {
   return NULL;
 }
 
+ssize_t fs_write(int fd, const void *buf, size_t len);
 static inline _RegSet* sys_write(_RegSet *r) {
   //Log();
   int fd = (int)SYSCALL_ARG2(r);
   const void* buf = (const void*)SYSCALL_ARG3(r);
   size_t count = (size_t)SYSCALL_ARG4(r);
 
-  if(fd == 1 || fd == 2) {
-    int i;
-    for(i = 0;i < count; i++){
-      _putc(((char *)buf)[i]);
-    }
-    SYSCALL_ARG1(r) = i;
-  }
+  // if(fd == 1 || fd == 2) {
+  //   int i;
+  //   for(i = 0;i < count; i++){
+  //     _putc(((char *)buf)[i]);
+  //   }
+  //   SYSCALL_ARG1(r) = i;
+  // }
+  SYSCALL_ARG1(r) = fs_write(fd, buf, count);
   return NULL;
 }
 
