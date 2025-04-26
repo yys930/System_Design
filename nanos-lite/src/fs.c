@@ -35,9 +35,6 @@ size_t events_read(void *buf, size_t len);
 
 
 ssize_t fs_read(int fd, void *buf, size_t len) {
-  assert(fd != FD_STDOUT && fd != FD_STDERR && fd != FD_STDIN);   
-  assert(fd < NR_FILES);
-  
   off_t fd_open_offset, offset;
   size_t fd_size;
 
@@ -63,9 +60,6 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len) {
-  assert(fd != FD_STDIN);
-  assert(fd < NR_FILES);
-  
   int i;
   off_t fd_open_offset, offset;
   size_t fd_size;
@@ -95,7 +89,6 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
-  assert(fd < NR_FILES);
   switch (whence) {
     case SEEK_SET: file_table[fd].open_offset = offset; 
     break;
