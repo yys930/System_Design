@@ -57,10 +57,15 @@ static inline _RegSet* sys_close(_RegSet *r) {
   return NULL;
 }
 
+off_t fs_lseek(int fd, off_t offset, int whence);
 static inline _RegSet* sys_lseek(_RegSet *r) {
-  
+  int fd = (int)SYSCALL_ARG2(r);
+  off_t offset = (off_t)SYSCALL_ARG3(r);
+  int whence = (int)SYSCALL_ARG4(r);
+  SYSCALL_ARG1(r) = fs_lseek(fd, offset, whence);
   return NULL;
 }
+
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
