@@ -13,7 +13,7 @@ static inline _RegSet* sys_exit(_RegSet *r) {
 
 static inline _RegSet* sys_write(_RegSet *r) {
   int fd = (int)SYSCALL_ARG2(r);
-  void* buf = (void*)SYSCALL_ARG3(r);
+  const void* buf = (const void*)SYSCALL_ARG3(r);
   size_t count = (size_t)SYSCALL_ARG4(r);
 
   if(fd == 1 || fd == 2) {
