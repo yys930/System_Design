@@ -50,8 +50,10 @@ static inline _RegSet* sys_read(_RegSet *r) {
   return NULL;
 }
 
+int fs_close(int fd);
 static inline _RegSet* sys_close(_RegSet *r) {
-  
+  int fd = (int)SYSCALL_ARG2(r);
+  SYSCALL_ARG1(r) = fs_close(fd);
   return NULL;
 }
 
