@@ -26,6 +26,11 @@ static inline _RegSet* sys_write(_RegSet *r) {
   return NULL;
 }
 
+static inline _RegSet* sys_brk(_RegSet *r) {
+  _heap.end = (void *)SYSCALL_ARG2(r);
+  SYSCALL_ARG1(r) = 0;
+  return NULL;
+}
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -37,6 +42,8 @@ _RegSet* do_syscall(_RegSet *r) {
     case SYS_exit: sys_exit(r);
                    break;
     case SYS_write: sys_write(r);
+                   break;
+    case SYS_brk: sys_brk(r);
                    break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
