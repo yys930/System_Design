@@ -14,7 +14,7 @@ static inline _RegSet* sys_exit(_RegSet *r) {
 static inline _RegSet* sys_write(_RegSet *r) {
   int fd = (int)SYSCALL_ARG2(r);
   char* buf = (char*)SYSCALL_ARG3(r);
-  int count = (int)SYSCALL_ARG4(r);
+  size_t count = (size_t)SYSCALL_ARG4(r);
 
   if(fd == 1 || fd == 2) {
     for(int i = 0;i < count;i++){
