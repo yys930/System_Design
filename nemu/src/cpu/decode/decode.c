@@ -320,3 +320,12 @@ make_DHelper(r2a) {
   decode_op_a(eip, id_dest, true);
   decode_op_r(eip, id_src, true);
 }
+
+//cr0 and cr3
+make_DHelper(r2cr) {
+  read_cr_r(eip, id_dest, false, id_src, true);
+}
+
+make_DHelper(cr2r) {
+  read_cr_r(eip, id_src, true, id_dest, false);
+}
