@@ -1,21 +1,27 @@
 #include "common.h"
 
-#define DEFAULT_ENTRY ((void *)0x4000000)
+#define DEFAULT_ENTRY ((void *)0x8048000)
 void ramdisk_read(void *buf, off_t offset, size_t len);
 size_t get_ramdisk_size();
-
+void* new_page(void);
 int fs_open(const char *pathname, int flags, int mode);
 ssize_t fs_read(int fd, void *buf, size_t len);
 size_t fs_filesz(int fd);
 int fs_close(int fd);
 
 uintptr_t loader(_Protect *as, const char *filename) {
-  //TODO();
-  // size_t len;
-  // len = get_ramdisk_size();
-  // ramdisk_read(DEFAULT_ENTRY, 0, len);
   int fd = fs_open(filename, 0, 0);
-  fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
+  int i, pages = fs_filesz(fd) / PGSIZE + 1;
+  void *pa, *va;
+  
+  for (i = 0, va = DEFAULT_ENTRY; i < pages; ++i, va += PGSIZE) {
+    pa = new_page();
+    // printf("pa: %x, va: %x", pa, va);
+    // printf(", read: %d\n", fs_read(fd, pa, PGSIZE));
+    fs_read(fd, pa, PGSIZE);
+    _map(as, va, pa);
+  }
+
   fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
 }
