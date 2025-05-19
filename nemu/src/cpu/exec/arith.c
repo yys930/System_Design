@@ -86,8 +86,8 @@ make_EHelper(dec) {
   rtl_msb(&t1, &t1, id_dest->width);
   rtl_set_OF(&t1);
   
-  rtl_sltu(&t1, &id_dest->val, &t0);
-  rtl_set_CF(&t1);
+  // rtl_sltu(&t1, &id_dest->val, &t0);
+  // rtl_set_CF(&t1);
 
   print_asm_template1(dec);
 }
