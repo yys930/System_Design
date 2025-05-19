@@ -313,6 +313,7 @@ make_DHelper(out_a2dx) {
 void operand_write(Operand *op, rtlreg_t* src) {
   if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }
   else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, op->width, src); }
+  else if (op->type == OP_TYPE_CREG) { rtl_scr(op->reg, src); }
   else { assert(0); }
 }
 
