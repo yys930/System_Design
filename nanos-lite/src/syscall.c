@@ -29,11 +29,16 @@ static inline _RegSet* sys_write(_RegSet *r) {
   return NULL;
 }
 
+
+int mm_brk(uint32_t new_brk);
 static inline _RegSet* sys_brk(_RegSet *r) {
-  _heap.end = (void *)SYSCALL_ARG2(r);
-  SYSCALL_ARG1(r) = 0;
+  // _heap.end = (void *)SYSCALL_ARG2(r);
+  // SYSCALL_ARG1(r) = 0;
+  uint32_t new_brk = SYSCALL_ARG2(r);
+  SYSCALL_ARG1(r) = mm_brk(new_brk);
   return NULL;
 }
+
 int fs_open(const char *pathname, int flags, int mode);
 static inline _RegSet* sys_open(_RegSet *r) {
   const char *path = (const char *)SYSCALL_ARG2(r);
