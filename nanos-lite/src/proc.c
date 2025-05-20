@@ -31,7 +31,7 @@ _RegSet* schedule(_RegSet *prev) {
   if (current)
     current->tf = prev;
   
-  current = &pcb[0];
+  current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
   // static int count_game = 0;
   // if (count_game >= 100 && current != &pcb[1]) {
   //   current = &pcb[1];
