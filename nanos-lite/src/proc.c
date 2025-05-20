@@ -27,5 +27,20 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
-  return NULL;
+
+  if (current)
+    current->tf = prev;
+  
+  current = &pcb[0];
+  // static int count_game = 0;
+  // if (count_game >= 100 && current != &pcb[1]) {
+  //   current = &pcb[1];
+  //   count_game = 0;
+  // }
+  // else {
+  //   current = current_game;
+  //   count_game++;
+  // }
+  _switch(&current->as); 
+  return current->tf;
 }

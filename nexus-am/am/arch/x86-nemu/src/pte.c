@@ -77,9 +77,27 @@ void _map(_Protect *p, void *va, void *pa) {
   ptab[PTX(va)] = ((uint32_t)pa & ~0xfff) | PTE_P;
 }
 
-void _unmap(_Protect *p, void *va) {
+_RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
+  uint32_t *pstack = ustack.end;
+  *(--pstack) = 0;              
+  *(--pstack) = 0;              
+  *(--pstack) = 0;              
+  *(--pstack) = 0xffffffff;     
+  
+  *(--pstack) = 0x202;            
+  *(--pstack) = 8;                
+  *(--pstack) = (uint32_t)entry;  
+  
+  *(--pstack) = 0;                    
+  *(--pstack) = 0x81;                 
+  *(--pstack) = 0;                    
+  *(--pstack) = 0;                   
+  *(--pstack) = 0;                   
+  *(--pstack) = 0;                    
+  *(--pstack) = 0;                    
+  *(--pstack) = (uint32_t)ustack.end; 
+  *(--pstack) = 0;                   
+  *(--pstack) = 0;                    
+  return (_RegSet *)pstack;
 }
 
-_RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  return NULL;
-}
