@@ -22,6 +22,7 @@ size_t events_read(void *buf, size_t len) {
     }
 
     if (down && key == _KEY_F12) {
+      
       F12_game_change();
     }
     sprintf((char *)buf, "k%c %s\n", (down ? 'd' : 'u'), keyname[key]);
