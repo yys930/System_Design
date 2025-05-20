@@ -84,7 +84,7 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
   *(--pstack) = 0;              
   *(--pstack) = 0xffffffff;     
   
-  *(--pstack) = 0x02 | FL_IF;            
+  *(--pstack) = 0x02 | FL_IF;            // 
   *(--pstack) = 8;                
   *(--pstack) = (uint32_t)entry;  
   
