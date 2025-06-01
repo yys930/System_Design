@@ -8,17 +8,15 @@ typedef int FLOAT;
 static inline int F2int(FLOAT a) {
   // assert(0);
   // return 0;
-  FLOAT ans;
-  ans = ((a & 0x80000000) == 0) ? (a >> 16) : (-((-a) >> 16));
-  return ans;
+  
+  return ((a & 0x80000000) == 0) ? (a >> 16) : (-((-a) >> 16));
 }
 
 static inline FLOAT int2F(int a) {
   //assert(0);
   //return 0;
-  FLOAT ans;
-  ans = ((a & 0x80000000) == 0) ? (a << 16) : (-((-a) << 16));
-  return ans;
+
+  return ((a & 0x80000000) == 0) ? (a << 16) : (-((-a) << 16));
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
