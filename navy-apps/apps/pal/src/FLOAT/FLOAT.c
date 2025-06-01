@@ -5,13 +5,27 @@
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
   // assert(0);
   // return 0;
-  return ((int64_t)a * b) >> 16;
+  return ((int64_t)a * (int64_t)b) >> 16;
+}
+FLOAT F_inv(FLOAT x) {
+  // 使用牛顿迭代法计算倒数
+  // 牛顿法：1 / x ≈ (2 - x * guess) * guess
+  FLOAT guess = 1 << 16;  // 初始化猜测值
+  for (int i = 0; i < 10; i++) {
+    guess = (2 - F_mul_F(x, guess)) * guess;
+  }
+  return guess;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
   // assert(0);
   // return 0;
-  return ((int64_t)a << 16) / b;
+  assert(b != 0);
+
+  // 使用倒数法来实现除法
+  FLOAT reciprocal_b = F_inv(b);  // 计算b的倒数
+  return F_mul_F(a, reciprocal_b);  // 用乘法代替除法
+  // return ((int64_t)a << 16) / b;
 }
 
 FLOAT f2F(float a) {
