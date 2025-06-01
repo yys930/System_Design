@@ -2,33 +2,48 @@
 #include <stdint.h>
 #include <assert.h>
 
-FLOAT F_mul_F(FLOAT a, FLOAT b) {
+struct float_
+{
+  uint32_t frac : 23;
+  uint32_t exp : 8;
+  uint32_t sign : 1;
+};
+FLOAT F_mul_F(FLOAT a, FLOAT b)
+{
   // assert(0);
   // return 0;
   return ((int64_t)a * (int64_t)b) >> 16;
 }
-FLOAT F_inv(FLOAT x) {
-  // 使用牛顿迭代法计算倒数
-  // 牛顿法：1 / x ≈ (2 - x * guess) * guess
-  FLOAT guess = 1 << 16;  // 初始化猜测值
-  for (int i = 0; i < 10; i++) {
-    guess = (2 - F_mul_F(x, guess)) * guess;
-  }
-  return guess;
-}
 
-FLOAT F_div_F(FLOAT a, FLOAT b) {
+FLOAT F_div_F(FLOAT a, FLOAT b)
+{
   // assert(0);
   // return 0;
   assert(b != 0);
+  FLOAT x = Fabs(a);
+  FLOAT y = Fabs(b);
+  FLOAT z = x / y;
+  x = x % y;
 
-  // 使用倒数法来实现除法
-  FLOAT reciprocal_b = F_inv(b);  // 计算b的倒数
-  return F_mul_F(a, reciprocal_b);  // 用乘法代替除法
-  return ((int64_t)a << 16) / b;
+  for (int i = 0; i < 16; i++)
+  {
+    x <<= 1;
+    z <<= 1;
+    if (x >= y)
+    {
+      x -= y;
+      z++;
+    }
+  }
+  if (((a ^ b) & 0x80000000) == 0x80000000)
+  {
+    z = -z;
+  }
+  return z;
 }
 
-FLOAT f2F(float a) {
+FLOAT f2F(float a)
+{
   /* You should figure out how to convert `a' into FLOAT without
    * introducing x87 floating point instructions. Else you can
    * not run this code in NEMU before implementing x87 floating
@@ -39,37 +54,34 @@ FLOAT f2F(float a) {
    * performing arithmetic operations on it directly?
    */
 
-  // assert(0);
-  // return 0;
-  union {
-    float f;
-    uint32_t u;
-  } v;
-  v.f = a;
-
-  uint32_t sign = v.u >> 31;
-  int exp = ((v.u >> 23) & 0xFF) - 127;
-  uint32_t frac = (v.u & 0x7FFFFF) | 0x800000; // 1.f, 24位
-
-  int64_t val = (int64_t)frac;
-
-  if (exp >= 7) {
-    val = val << (exp - 7);
-  } else {
-    val = val >> (7 - exp);
+  struct float_ *f = (struct float_ *)&a;
+  uint32_t res;
+  uint32_t frac;
+  int exp;
+  if ((f->exp & 0xff) == 0xff)
+    assert(0);
+  else if (f->exp == 0)
+  {
+    exp = 1 - 127;
+    frac = (f->frac & 0x7fffff);
   }
-
-  val = val >> 8;  // Q7.24 -> Q16.16
-  if (sign) val = -val;
-
-  return (FLOAT)val;
-
+  else
+  {
+    exp = f->exp - 127;
+    frac = (f->frac & 0x7fffff) | (1 << 23);
+  }
+  if (exp >= 7 && exp < 22)
+    res = frac << (exp - 7);
+  else if (exp < 7 && exp > -32)
+    res = frac >> 7 >> -exp;
+  else
+    assert(0);
+  return (f->sign) ? -res : res;
 }
 
-FLOAT Fabs(FLOAT a) {
-  // assert(0);
-  // return 0;
-  return a < 0 ? -a : a;
+FLOAT Fabs(FLOAT a)
+{
+  return (a > 0) ? a : -a;
 }
 
 /* Functions below are already implemented */
