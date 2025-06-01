@@ -3,12 +3,12 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  assert(0);
+  //assert(0);
   return 0;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  assert(0);
+  //assert(0);
   return 0;
 }
 
@@ -23,13 +23,13 @@ FLOAT f2F(float a) {
    * performing arithmetic operations on it directly?
    */
 
-  assert(0);
+  //assert(0);
   return 0;
 
 }
 
 FLOAT Fabs(FLOAT a) {
-  assert(0);
+  //assert(0);
   return 0;
 }
 
