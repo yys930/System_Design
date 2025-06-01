@@ -25,8 +25,31 @@ FLOAT f2F(float a) {
    * performing arithmetic operations on it directly?
    */
 
-  assert(0);
-  return 0;
+  // assert(0);
+  // return 0;
+  union {
+    float f;
+    uint32_t u;
+  } v;
+  v.f = a;
+
+  uint32_t sign = v.u >> 31;
+  int exp = ((v.u >> 23) & 0xFF) - 127;
+  uint32_t frac = (v.u & 0x7FFFFF) | 0x800000; // 1.f, 24位
+
+  int64_t val = (int64_t)frac;
+
+  if (exp >= 7) {
+    val = val << (exp - 7);
+  } else {
+    val = val >> (7 - exp);
+  }
+
+  val = val >> 8;  // Q7.24 -> Q16.16
+  if (sign) val = -val;
+
+  return (FLOAT)val;
+
 }
 
 FLOAT Fabs(FLOAT a) {
