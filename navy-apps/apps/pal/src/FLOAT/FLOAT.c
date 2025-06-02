@@ -2,12 +2,6 @@
 #include <stdint.h>
 #include <assert.h>
 
-struct float_
-{
-  uint32_t frac : 23;
-  uint32_t exp : 8;
-  uint32_t sign : 1;
-};
 FLOAT F_mul_F(FLOAT a, FLOAT b)
 {
   // assert(0);
@@ -20,26 +14,29 @@ FLOAT F_div_F(FLOAT a, FLOAT b)
   // assert(0);
   // return 0;
   assert(b != 0);
-  FLOAT x = Fabs(a);
-  FLOAT y = Fabs(b);
-  FLOAT z = x / y;
-  x = x % y;
 
-  for (int i = 0; i < 16; i++)
-  {
-    x <<= 1;
-    z <<= 1;
-    if (x >= y)
-    {
-      x -= y;
-      z++;
+  // 先取绝对值做无符号除法
+  FLOAT abs_num = Fabs(a);
+  FLOAT abs_den = Fabs(b);
+  FLOAT result = abs_num / abs_den;
+  FLOAT remainder = abs_num % abs_den;
+
+  // 模拟小数位右移，对结果进行16次“乘2”的迭代逼近
+  for (int i = 0; i < 16; ++i) {
+    remainder <<= 1;
+    result <<= 1;
+    if (remainder >= abs_den) {
+      remainder -= abs_den;
+      result += 1;
     }
   }
-  if (((a ^ b) & 0x80000000) == 0x80000000)
-  {
-    z = -z;
+
+  // 如果原始两个数符号相反，结果取反
+  if ((a ^ b) < 0) {
+    result = -result;
   }
-  return z;
+
+  return result;
 }
 
 FLOAT f2F(float a)
@@ -53,30 +50,44 @@ FLOAT f2F(float a)
    * stack. How do you retrieve it to another variable without
    * performing arithmetic operations on it directly?
    */
+  
+    struct float_
+  {
+    uint32_t frac : 23;
+    uint32_t exp : 8;
+    uint32_t sign : 1;
+  };
 
   struct float_ *f = (struct float_ *)&a;
-  uint32_t res;
-  uint32_t frac;
-  int exp;
-  if ((f->exp & 0xff) == 0xff)
-    assert(0);
-  else if (f->exp == 0)
-  {
-    exp = 1 - 127;
-    frac = (f->frac & 0x7fffff);
+
+  // 屏蔽 NaN/Inf
+  assert(f->exp != 0xFF);
+
+  uint32_t frac = f->frac;
+  int e = 0;
+
+  if (f->exp == 0) {
+    // 非规格化数
+    e = 1 - 127;
+  } else {
+    // 规格化数，加上隐藏位
+    frac |= (1 << 23);
+    e = f->exp - 127;
   }
-  else
-  {
-    exp = f->exp - 127;
-    frac = (f->frac & 0x7fffff) | (1 << 23);
-  }
-  if (exp >= 7 && exp < 22)
-    res = frac << (exp - 7);
-  else if (exp < 7 && exp > -32)
-    res = frac >> 7 >> -exp;
-  else
+
+  uint32_t fixed = 0;
+  int shift = e - 7;
+
+  if (shift >= 0 && shift < 32) {
+    fixed = frac << shift;
+  } else if (shift < 0 && shift > -32) {
+    fixed = frac >> -shift;
+  } else {
+    // 超出定点数表示范围
     assert(0);
-  return (f->sign) ? -res : res;
+  }
+
+  return f->sign ? -fixed : fixed;
 }
 
 FLOAT Fabs(FLOAT a)
