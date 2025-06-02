@@ -39,6 +39,13 @@ FLOAT F_div_F(FLOAT a, FLOAT b)
   return result;
 }
 
+struct float_
+  {
+    uint32_t frac : 23;
+    uint32_t exp : 8;
+    uint32_t sign : 1;
+  };
+
 FLOAT f2F(float a)
 {
   /* You should figure out how to convert `a' into FLOAT without
@@ -51,13 +58,6 @@ FLOAT f2F(float a)
    * performing arithmetic operations on it directly?
    */
   
-    struct float_
-  {
-    uint32_t frac : 23;
-    uint32_t exp : 8;
-    uint32_t sign : 1;
-  };
-
   struct float_ *f = (struct float_ *)&a;
 
   // 屏蔽 NaN/Inf
