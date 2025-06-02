@@ -224,5 +224,33 @@ static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
   rtl_update_SF(result, width);
 }
 
+static inline void rtl_shx(
+  const rtlreg_t *dest_val,
+  const rtlreg_t *src_val,
+  const rtlreg_t *src2_val,
+  int width,
+  bool is_left_shift,
+  rtlreg_t *result
+) {
+  rtlreg_t t0, t2;
+
+  if (is_left_shift) {
+    rtl_shl(&t0, dest_val, src_val);  // dest << src
+  } else {
+    rtl_shr(&t0, dest_val, src_val);  // dest >> src
+  }
+
+  rtl_li(&t2, width);         // t2 <- width
+  rtl_shli(&t2, &t2, 3);      // t2 <- width << 3
+  rtl_subi(&t2, &t2, *src_val);  // t2 <- t2 - src
+
+  if (is_left_shift) {
+    rtl_shr(&t2, src2_val, &t2);  // t2 <- src2 >> t2
+  } else {
+    rtl_shl(&t2, src2_val, &t2);  // t2 <- src2 << t2
+  }
+
+  rtl_or(result, &t0, &t2);  // result <- t0 | t2
+}
 
 #endif
